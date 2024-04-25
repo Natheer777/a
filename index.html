@@ -37,7 +37,7 @@
     document.getElementById('searchButton').addEventListener('click', function() {
       let searchQuery = document.getElementById('searchQuery').value;
       let data = '{"Page":0,"Term":"' + searchQuery + '","Mode":0}';
-      let proxyUrl = 'http://localhost:8000/https://shinjikai.app/rpc/SearchWords'; // Proxy server URL
+      let proxyUrl = 'https://a-lokl.onrender.com/https://shinjikai.app/rpc/SearchWords'; // Proxy server URL
 
       let config = {
         method: 'post',
