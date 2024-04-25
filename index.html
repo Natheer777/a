@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./style.css">
+  <title>Example</title>
+  <style>
+    /* Styles as provided */
+  </style>
+</head>
+<body>
+  <div class="container">
+    <label for="searchQuery">Enter search term:</label>
+    <input type="text" id="searchQuery" name="searchQuery">
+    <button id="searchButton">Search</button>
+  </div>
+  <!-- Search results will be displayed here -->
+  <h2>Japanese Greetings</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Kana</th>
+        <th>Meaning Summary</th>
+        <th>Short Meaning Summary</th>
+      </tr>
+    </thead>
+    <tbody id="greetingsTableBody">
+      <!-- Data will be dynamically populated here -->
+    </tbody>
+  </table>
+  
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    document.getElementById('searchButton').addEventListener('click', function() {
+      let searchQuery = document.getElementById('searchQuery').value;
+      let data = '{"Page":0,"Term":"' + searchQuery + '","Mode":0}';
+      let proxyUrl = 'http://localhost:8000/https://shinjikai.app/rpc/SearchWords'; // Proxy server URL
+
+      let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: proxyUrl,
+        headers: { 
+        },
+        data: data
+      };
+
+      axios.request(config)
+      .then((response) => {
+        let jsonData = response.data;
+        populateTable(jsonData);
+      })
+
+    });
+
+    function populateTable(data) {
+      var tableBody = document.getElementById("greetingsTableBody");
+      tableBody.innerHTML = "";
+      if (data.Items.length === 0) {
+        // If no results, display a comment
+        tableBody.innerHTML = "<tr><td colspan='4'>No results found</td></tr>";
+      } else {
+        // If there are results, populate the table
+        data.Items.forEach(function(item) {
+          var row = "<tr>";
+          row += "<td>" + item.Id + "</td>";
+          row += "<td>" + item.Kana + "</td>";
+          row += "<td>" + item.MeaningSummary + "</td>";
+          row += "<td>" + item.ShortMeaningSummary + "</td>";
+          row += "</tr>";
+          tableBody.innerHTML += row;
+        });
+      }
+    }
+  </script>
+</body>
+</html>
